@@ -68,7 +68,7 @@ def getEveryDay(begin_date, end_date):
     try:
         datetime.datetime.strptime(begin_date, "%Y-%m-%d")
     except ValueError:
-        date_format = "%Y年%m月%d日"
+        date_format = '%Y{y}%m{m}%d{d}'.format(y='年', m='月', d='日')
     begin_date = datetime.datetime.strptime(begin_date, date_format)
     end_date = datetime.datetime.strptime(end_date, date_format)
     while begin_date <= end_date:
