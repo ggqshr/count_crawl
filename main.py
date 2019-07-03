@@ -64,10 +64,15 @@ def getEveryDay(begin_date, end_date):
     :return:
     """
     date_list = []
-    begin_date = datetime.datetime.strptime(begin_date, "%Y-%m-%d")
-    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    date_format = "%Y-%m-%d"
+    try:
+        datetime.datetime.strptime(begin_date, "%Y-%m-%d")
+    except ValueError:
+        date_format = "%Y年%m月%d日"
+    begin_date = datetime.datetime.strptime(begin_date, date_format)
+    end_date = datetime.datetime.strptime(end_date, date_format)
     while begin_date <= end_date:
-        date_str = begin_date.strftime("%Y-%m-%d")
+        date_str = begin_date.strftime(date_format)
         date_list.append(date_str)
         begin_date += datetime.timedelta(days=1)
     return date_list
