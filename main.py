@@ -104,12 +104,13 @@ def write2file(db_name, col_name, date_dict: dict) -> None:
 if __name__ == '__main__':
     # 获取所有连接信息
     all_data_dict = get_database_and_collect()
-    # 连接数据库并按照日期进行聚合
-    result = connect2db("YJS", *all_data_dict['YJS'])
-    # 将结果转为字典，日期为key，对应日期的数量为value
-    all_date = {item['_id']: item["count"] for item in result}
-    # 排序并过滤，生成最大日期和最小日期之间的所有日期填充的字典
-    range_date_dict = sort_fill_dict(all_date.keys())
-    # 根据查询的结果更新字典
-    range_date_dict.update(all_date)
-    write2file("YJS", all_data_dict['YJS'][0], range_date_dict)
+    for k in all_data_dict.keys():
+        # 连接数据库并按照日期进行聚合
+        result = connect2db(k, *all_data_dict[k])
+        # 将结果转为字典，日期为key，对应日期的数量为value
+        all_date = {item['_id']: item["count"] for item in result}
+        # 排序并过滤，生成最大日期和最小日期之间的所有日期填充的字典
+        range_date_dict = sort_fill_dict(all_date.keys())
+        # 根据查询的结果更新字典
+        range_date_dict.update(all_date)
+        write2file(k, all_data_dict[k][0], range_date_dict)
