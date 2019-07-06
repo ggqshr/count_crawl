@@ -113,11 +113,14 @@ if __name__ == '__main__':
     all_data_dict = get_database_and_collect()
     for k in all_data_dict.keys():
         # 连接数据库并按照日期进行聚合
+        print("连接数据库....")
         result = connect2db(k, *all_data_dict[k])
         # 将结果转为字典，日期为key，对应日期的数量为value
         all_date = {item['_id']: item["count"] for item in result}
         # 排序并过滤，生成最大日期和最小日期之间的所有日期填充的字典
+        print("排序中....")
         range_date_dict = sort_fill_dict(all_date.keys())
         # 根据查询的结果更新字典
         range_date_dict.update(all_date)
+        print("写入文件中....")
         write2file(k, all_data_dict[k][0], range_date_dict)
