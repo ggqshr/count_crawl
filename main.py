@@ -13,7 +13,7 @@ def get_database_and_collect():
     从文件中读取数据库名和集合名以及他们的地址
     :return:
     """
-    all_data_dict = {}
+    all_data_list = []
     with open(DB_COLLECT_FILE, 'r') as f:
         data_dict = yaml.load(f.read())
         for k in data_dict.keys():
@@ -27,15 +27,8 @@ def get_database_and_collect():
                     return
                 db_name = db_prop[0]
                 collection_name = db_prop[1]
-
-
-        for line in f.readlines():
-            data_list = line.split(":")
-            assert len(data_list) == 3
-            db_name, col_name = data_list[0].split(".")  # 获得数据库名和集合名
-            ip_addr, port = data_list[1], int(data_list[2])
-            all_data_dict[db_name] = (col_name, ip_addr, port)
-    return all_data_dict
+                all_data_list.append((db_name, collection_name, this_host, this_port))
+    return all_data_list
 
 
 def connect2db(db_name, col_name, ip, port):
@@ -126,10 +119,11 @@ def write2file(db_name, col_name, date_dict: dict) -> None:
 if __name__ == '__main__':
     # 获取所有连接信息
     all_data_dict = get_database_and_collect()
-    for k in all_data_dict.keys():
+    for item in all_data_dict:
+        k = item[0]
         # 连接数据库并按照日期进行聚合
         print("连接数据库....")
-        result = connect2db(k, *all_data_dict[k])
+        result = connect2db(k, *item[1:])
         # 将结果转为字典，日期为key，对应日期的数量为value
         all_date = {item['_id']: item["count"] for item in result}
         # 排序并过滤，生成最大日期和最小日期之间的所有日期填充的字典
@@ -138,4 +132,4 @@ if __name__ == '__main__':
         # 根据查询的结果更新字典
         range_date_dict.update(all_date)
         print("写入文件中....")
-        write2file(k, all_data_dict[k][0], range_date_dict)
+        write2file(k, item[1], range_date_dict)
