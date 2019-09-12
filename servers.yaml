@@ -2,7 +2,4 @@ db1:
   host: 116.56.140.202
   port: 27017
   databases:
-    - Baidu.Baidu
-    - LiePin.LiePin
-    - QianCheng.QianCheng
     - YJS.YJS
