@@ -1,0 +1,8 @@
+db1:
+  host: localhost
+  port: 27017
+  databases:
+    - Baidu.Baidu
+    - LiePin.LiePin
+    - QianCheng.QianCheng
+    - YJS.YJS

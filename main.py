@@ -2,9 +2,10 @@ import pymongo
 import calendar
 import datetime
 from tqdm import tqdm
+import yaml
 import locale
 
-DB_COLLECT_FILE = "servers"
+DB_COLLECT_FILE = "servers.yaml"
 
 
 def get_database_and_collect():
@@ -14,6 +15,20 @@ def get_database_and_collect():
     """
     all_data_dict = {}
     with open(DB_COLLECT_FILE, 'r') as f:
+        data_dict = yaml.load(f.read())
+        for k in data_dict.keys():
+            this_item = data_dict[k]
+            this_host = this_item['host']
+            this_port = this_item['port']
+            for db in this_item['databases']:
+                db_prop = db.split(".")
+                if len(db_prop) != 2:
+                    print("请按照dbname.collection_name的格式输入要统计的数据库")
+                    return
+                db_name = db_prop[0]
+                collection_name = db_prop[1]
+
+
         for line in f.readlines():
             data_list = line.split(":")
             assert len(data_list) == 3
