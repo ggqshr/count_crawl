@@ -15,7 +15,7 @@ def get_database_and_collect():
     """
     all_data_list = []
     with open(DB_COLLECT_FILE, 'r') as f:
-        data_dict = yaml.load(f.read())
+        data_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
         for k in data_dict.keys():
             this_item = data_dict[k]
             this_host = this_item['host']
